@@ -276,32 +276,37 @@ class _FloatBoxState extends State<FloatBoxPanel> {
                 );
               },
               onTap: () {
-                setState(
-                  () {
-                    // Set the animation speed to custom duration;
-                    _movementSpeed = widget.panelAnimDuration ?? 200;
+                if (_buttons.isNotEmpty) {
+                  setState(
+                        () {
+                      // Set the animation speed to custom duration;
+                      _movementSpeed = widget.panelAnimDuration ?? 200;
 
-                    if (_panelState == PanelState.open) {
-                      // If panel state is "open", set it to "closed";
-                      _panelState = PanelState.closed;
+                      if (_panelState == PanelState.open) {
+                        // If panel state is "open", set it to "closed";
+                        _panelState = PanelState.closed;
 
-                      // Reset panel position, dock it to nearest edge;
-                      _forceDock();
+                        // Reset panel position, dock it to nearest edge;
+                        _forceDock();
 
-                      print("Float panel closed.");
-                    } else {
-                      // If panel state is "closed", set it to "open";
-                      _panelState = PanelState.open;
+                        print("Float panel closed.");
+                      } else {
+                        // If panel state is "closed", set it to "open";
+                        _panelState = PanelState.open;
 
-                      // Set the left side position;
-                      _positionLeft = _openDockLeft();
+                        // Set the left side position;
+                        _positionLeft = _openDockLeft();
 
-                      _calcPanelTop();
+                        _calcPanelTop();
 
-                      print("Float Panel Open.");
-                    }
-                  },
-                );
+                        print("Float Panel Open.");
+                      }
+                    },
+                  );
+                } else  {
+                  widget.onPressed(0);
+                }
+
               },
               child: _FloatButton(
                 size: widget.size ?? 70.0,
@@ -310,26 +315,28 @@ class _FloatBoxState extends State<FloatBoxPanel> {
                 iconSize: widget.iconSize ?? 24.0,
               ),
             ),
-            Visibility(
-              visible: true, // TODO:: _contentVisibility,
-              child: Container(
-                child: Column(
-                  children: List.generate(_buttons.length, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        widget.onPressed(index);
-                      },
-                      child: _FloatButton(
-                        size: widget.size ?? 70.0,
-                        icon: _buttons[index] ?? Icons.add,
-                        color: widget.contentColor ?? Colors.white,
-                        iconSize: widget.iconSize ?? 24.0,
-                      ),
-                    );
-                  }),
+            if (_buttons.isNotEmpty)
+              Visibility(
+                visible: _panelState == PanelState.open,
+                // TODO:: _contentVisibility,
+                child: Container(
+                  child: Column(
+                    children: List.generate(_buttons.length, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          widget.onPressed(index);
+                        },
+                        child: _FloatButton(
+                          size: widget.size ?? 70.0,
+                          icon: _buttons[index] ?? Icons.add,
+                          color: widget.contentColor ?? Colors.white,
+                          iconSize: widget.iconSize ?? 24.0,
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
