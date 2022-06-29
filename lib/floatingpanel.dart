@@ -13,41 +13,41 @@ class FloatBoxPanel extends StatefulWidget {
   final double borderWidth;
   final double size;
   final double iconSize;
-  final IconData panelIcon;
-  final BorderRadius borderRadius;
-  final Color backgroundColor;
+  final IconData? panelIcon;
+  final BorderRadius? borderRadius;
+  final Color? backgroundColor;
   final Color contentColor;
-  final PanelShape panelShape;
-  final PanelState panelState;
+  final PanelShape? panelShape;
+  final PanelState? panelState;
   final double panelOpenOffset;
-  final int panelAnimDuration;
-  final Curve panelAnimCurve;
-  final DockType dockType;
+  final int? panelAnimDuration;
+  final Curve? panelAnimCurve;
+  final DockType? dockType;
   final double dockOffset;
-  final int dockAnimDuration;
-  final Curve dockAnimCurve;
-  final List<IconData> buttons;
-  final Function(int) onPressed;
+  final int? dockAnimDuration;
+  final Curve? dockAnimCurve;
+  final List<IconData>? buttons;
+  final Function(int)? onPressed;
 
   FloatBoxPanel(
       {this.buttons,
-      this.positionTop,
-      this.positionLeft,
-      this.borderColor,
-      this.borderWidth,
-      this.iconSize,
+      this.positionTop = 0.0,
+      this.positionLeft = 0.0,
+      this.borderColor = const Color(0xFF333333),
+      this.borderWidth = 0.0,
+      this.iconSize = 24,
       this.panelIcon,
-      this.size,
+      this.size = 70,
       this.borderRadius,
       this.panelState,
-      this.panelOpenOffset,
+      this.panelOpenOffset = 30.0,
       this.panelAnimDuration,
       this.panelAnimCurve,
       this.backgroundColor,
-      this.contentColor,
+      this.contentColor = Colors.white,
       this.panelShape,
       this.dockType,
-      this.dockOffset,
+      this.dockOffset = 22,
       this.dockAnimCurve,
       this.dockAnimDuration,
       this.onPressed});
@@ -77,8 +77,8 @@ class _FloatBoxState extends State<FloatBoxPanel> {
 
   @override
   void initState() {
-    _positionTop = widget.positionTop ?? 0;
-    _positionLeft = widget.positionLeft ?? 0;
+    _positionTop = widget.positionTop;
+    _positionLeft = widget.positionLeft;
 
     super.initState();
   }
@@ -90,13 +90,13 @@ class _FloatBoxState extends State<FloatBoxPanel> {
     double _pageHeight = MediaQuery.of(context).size.height;
 
     // All Buttons;
-    List<IconData> _buttons = widget.buttons;
+    List<IconData> _buttons = widget.buttons!;
 
     // Dock offset creates the boundary for the page depending on the DockType;
-    double _dockOffset = widget.dockOffset ?? 20.0;
+    double _dockOffset = widget.dockOffset;
 
     // Widget size if the width of the panel;
-    double _widgetSize = widget.size ?? 70.0;
+    double _widgetSize = widget.size;
 
     // **** METHODS ****
 
@@ -132,7 +132,7 @@ class _FloatBoxState extends State<FloatBoxPanel> {
       if (widget.buttons == null) {
         return 0;
       } else {
-        return widget.buttons.length.toDouble();
+        return widget.buttons!.length.toDouble();
       }
     }
 
@@ -143,9 +143,9 @@ class _FloatBoxState extends State<FloatBoxPanel> {
         // digit height for each button to fix the overflow issue. Don't know
         // what's causing this, but adding "1" fixed the problem for now.
         return (_widgetSize + (_widgetSize + 1) * _totalButtons()) +
-            (widget.borderWidth ?? 0);
+            (widget.borderWidth);
       } else {
-        return _widgetSize + (widget.borderWidth ?? 0) * 2;
+        return _widgetSize + (widget.borderWidth) * 2;
       }
     }
 
@@ -161,19 +161,19 @@ class _FloatBoxState extends State<FloatBoxPanel> {
     double _openDockLeft() {
       if (_positionLeft < (_pageWidth / 2)) {
         // If panel is docked to the left;
-        return widget.panelOpenOffset ?? 30.0;
+        return widget.panelOpenOffset;
       } else {
         // If panel is docked to the right;
-        return ((_pageWidth - _widgetSize)) - (widget.panelOpenOffset ?? 30.0);
+        return ((_pageWidth - _widgetSize)) - (widget.panelOpenOffset );
       }
     }
 
     // Panel border is only enabled if the border width is greater than 0;
-    Border _panelBorder() {
-      if (widget.borderWidth != null && widget.borderWidth > 0) {
+    Border? _panelBorder() {
+      if ( widget.borderWidth> 0) {
         return Border.all(
-          color: widget.borderColor ?? Color(0xFF333333),
-          width: widget.borderWidth ?? 0.0,
+          color: widget.borderColor,
+          width: widget.borderWidth,
         );
       } else {
         return null;
@@ -304,15 +304,15 @@ class _FloatBoxState extends State<FloatBoxPanel> {
                     },
                   );
                 } else  {
-                  widget.onPressed(0);
+                  widget.onPressed!(0);
                 }
 
               },
               child: _FloatButton(
-                size: widget.size ?? 70.0,
+                size: widget.size,
                 icon: widget.panelIcon ?? Icons.add,
-                color: widget.contentColor ?? Colors.white,
-                iconSize: widget.iconSize ?? 24.0,
+                color: widget.contentColor,
+                iconSize: widget.iconSize,
               ),
             ),
             if (_buttons.isNotEmpty)
@@ -324,13 +324,13 @@ class _FloatBoxState extends State<FloatBoxPanel> {
                     children: List.generate(_buttons.length, (index) {
                       return GestureDetector(
                         onTap: () {
-                          widget.onPressed(index);
+                          widget.onPressed!(index);
                         },
                         child: _FloatButton(
-                          size: widget.size ?? 70.0,
-                          icon: _buttons[index] ?? Icons.add,
-                          color: widget.contentColor ?? Colors.white,
-                          iconSize: widget.iconSize ?? 24.0,
+                          size: widget.size,
+                          icon: _buttons[index],
+                          color: widget.contentColor,
+                          iconSize: widget.iconSize,
                         ),
                       );
                     }),
@@ -345,10 +345,10 @@ class _FloatBoxState extends State<FloatBoxPanel> {
 }
 
 class _FloatButton extends StatelessWidget {
-  final double size;
-  final Color color;
-  final IconData icon;
-  final double iconSize;
+  final double? size;
+  final Color? color;
+  final IconData? icon;
+  final double? iconSize;
 
   _FloatButton({this.size, this.color, this.icon, this.iconSize});
 
